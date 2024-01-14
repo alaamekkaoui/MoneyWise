@@ -5,6 +5,7 @@ import '../expenses/expenses_screen.dart';
 import '../goals/goals_screen.dart';
 import '../budget/salary_screen.dart';
 import '../budget/income_screen.dart';
+import 'firebase/firebase_database.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -23,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late int _monthlySalary;
   late int _totalIncome;
   late int _currentIncome;
+  late int _totalExpenses;
   late User? _user;
   late String _username;
 
@@ -33,9 +35,11 @@ class _HomeScreenState extends State<HomeScreen> {
     _monthlySalary = 0;
     _totalIncome = 0;
     _currentIncome = 0;
+    _totalExpenses = 0;
     _loadMonthlySalary();
     _loadTotalIncome();
     _fetchCurrentIncome();
+    _fetchTotalExpenses();
     _getUser();
   }
 
@@ -93,8 +97,17 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _fetchTotalExpenses() {
+    FirebaseDatabaseService().getTotalExpenses().listen((num totalExpenses) {
+      setState(() {
+        _totalExpenses = totalExpenses.toInt();
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    Color buttonColor = Theme.of(context).colorScheme.secondary;
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -120,16 +133,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                    Text('Welcome, $_username'),
-                    IconButton(
-                      onPressed: () async {
-                        await _auth.signOut();
-                        Navigator.popUntil(context, ModalRoute.withName('/'));
-                      },
-                      icon: const Icon(Icons.logout),
-                      tooltip: 'Logout',
+                    Text(
+                      'Welcome, $_username',
+                      style: TextStyle(
+                          fontSize: 25.0, fontWeight: FontWeight.bold),
                     ),
-                    const Text('Logout'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          onPressed: () async {
+                            await _auth.signOut();
+                            Navigator.popUntil(
+                                context, ModalRoute.withName('/'));
+                          },
+                          icon: const Icon(Icons.logout),
+                          tooltip: 'Logout',
+                        ),
+                        const Text('Logout'),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -219,84 +242,62 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 20.0),
-            const SizedBox(height: 20.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // Navigate to the screen to view expenses
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ExpensesScreen(),
-                      ),
-                    );
-                  },
-                  child: const Text('View Expenses'),
+            Card(
+              elevation: 3.0,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Total Expenses',
+                      style: TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                      width: 500.0,
+                    ),
+                    Text(
+                      '\$$_totalExpenses',
+                      style: const TextStyle(fontSize: 24.0),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            // Navigate to the screen to view expenses
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ExpensesScreen(),
+                              ),
+                            );
+                          },
+                          child: const Text('View Expenses'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Navigate to the screen to view goals
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => GoalsScreen(),
+                              ),
+                            );
+                          },
+                          child: const Text('View Goals'),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Navigate to the screen to view goals
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => GoalsScreen(),
-                      ),
-                    );
-                  },
-                  child: const Text('View Goals'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20.0),
-            const Text(
-              'List of Expenses',
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-            ),
-            Expanded(
-              child: FutureBuilder<List<Map<String, dynamic>>>(
-                future: getExpenses(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    return ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        var expense = snapshot.data![index];
-                        return ListTile(
-                          title: Text(expense['name'] ?? ''),
-                          subtitle: Text('Amount: \$${expense['amount'] ?? 0}'),
-                          // Add other details or buttons if needed
-                        );
-                      },
-                    );
-                  }
-                },
               ),
             ),
           ],
         ),
       ),
     );
-  }
-
-  Future<List<Map<String, dynamic>>> getExpenses() async {
-    QuerySnapshot snapshot = await _expensesCollection
-        .where('user_email', isEqualTo: _user?.email)
-        .get();
-    List<Map<String, dynamic>> expensesList = [];
-
-    snapshot.docs.forEach((document) {
-      expensesList.add({
-        'key': document.id,
-        ...document.data() as Map<String, dynamic>,
-      });
-    });
-
-    return expensesList;
   }
 }

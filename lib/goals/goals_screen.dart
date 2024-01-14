@@ -169,6 +169,7 @@ class GoalListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color buttonColor = Theme.of(context).colorScheme.secondary;
     int goalAmount = goal['amount'] ?? 0;
     double progressAmount = goal['progressAmount'] ?? 0.0;
     double progress = (progressAmount / goalAmount).clamp(0.0, 1.0);

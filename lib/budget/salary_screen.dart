@@ -64,6 +64,7 @@ class _SalaryScreenState extends State<SalaryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Color buttonColor = Theme.of(context).colorScheme.secondary;
     return Scaffold(
       appBar: AppBar(
         title: Text('Update Monthly Salary'),

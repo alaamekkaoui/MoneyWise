@@ -100,6 +100,7 @@ class _ExpenseDetailsScreenState extends State<ExpenseDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Color buttonColor = Theme.of(context).colorScheme.secondary;
     return Scaffold(
       appBar: AppBar(
         title: Text('Expense Details'),

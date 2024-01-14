@@ -1,4 +1,4 @@
-# app
+# Money Wise 
 
 A new Flutter project.
 

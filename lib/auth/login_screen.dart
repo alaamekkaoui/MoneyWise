@@ -2,7 +2,6 @@ import 'package:app/auth/signup_screen.dart';
 import 'package:app/firebase/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -18,15 +17,29 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    Color buttonColor = Theme.of(context).colorScheme.secondary;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text('Money Wise App'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Icon(
+              Icons.monetization_on,
+              size: 80.0,
+              color: buttonColor,
+            ),
+            Text(
+              'Login to Money Wise',
+              style: TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 20.0),
             TextField(
               controller: _usernameController,
               decoration: InputDecoration(labelText: 'Email'),
@@ -37,7 +50,6 @@ class _LoginPageState extends State<LoginPage> {
               obscureText: true,
               decoration: InputDecoration(labelText: 'Password'),
             ),
-            SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () async {
                 String username = _usernameController.text.trim();
@@ -58,16 +70,16 @@ class _LoginPageState extends State<LoginPage> {
                       _errorMessage = 'Sign-in failed. Check your credentials.';
                     });
 
-                    // Show error toast
-                    Fluttertoast.showToast(
-                      msg: _errorMessage,
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.TOP,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.red,
-                      textColor: Colors.white,
-                      fontSize: 16.0,
+                    // Show error message on the screen
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(_errorMessage),
+                        backgroundColor: Colors.red,
+                      ),
                     );
+
+                    // Print error message to the console
+                    print('Error: $_errorMessage');
                   }
                 } else {
                   // Username or password is empty
@@ -75,16 +87,16 @@ class _LoginPageState extends State<LoginPage> {
                     _errorMessage = 'Please enter username and password.';
                   });
 
-                  // Show error toast
-                  Fluttertoast.showToast(
-                    msg: _errorMessage,
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.TOP,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0,
+                  // Show error message on the screen
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(_errorMessage),
+                      backgroundColor: Colors.red,
+                    ),
                   );
+
+                  // Print error message to the console
+                  print('Error: $_errorMessage');
                 }
               },
               child: Text('Sign In'),

@@ -23,6 +23,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Color buttonColor = Theme.of(context).colorScheme.secondary;
     return Scaffold(
       appBar: AppBar(
         title: Column(

@@ -47,6 +47,7 @@ class _GoalDetailsScreenState extends State<GoalDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Color buttonColor = Theme.of(context).colorScheme.secondary;
     int goalAmount = widget.goal['amount'] ?? 0;
     double progress = (progressAmount / goalAmount).clamp(0.0, 1.0);
     bool goalComplete = progress >= 1.0;
