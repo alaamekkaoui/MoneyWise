@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "849755045068",
+    "project_id": "linear-encoder-194119",
+    "storage_bucket": "linear-encoder-194119.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849755045068:android:650bd03e832ea01e3f1669",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "849755045068-utqn48r0ep3u4f4hd913d58pgefdjvau.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATsODpIECJmajG18DB9cTYmLaNzO6XwjM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "849755045068-utqn48r0ep3u4f4hd913d58pgefdjvau.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
